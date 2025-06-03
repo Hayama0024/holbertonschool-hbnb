@@ -1,0 +1,109 @@
+# Task 1: Business Logic Layer - Class Diagram
+
+## Overview
+
+This document presents the detailed class diagram of
+the Business Logic Layer for the HBnB Evolution application.  
+The focus is on the core entities: **User, Place, Review, and Amenity**.  
+Each entity is described with its attributes, methods,
+and relationships based on the business logic requirements.
+
+-----------------------------------------
+
+## Class Diagram (Mermaid)
+
+```mermaid
+classDiagram
+class User {
+    +UUID id
+    +String first_name
+    +String last_name
+    +String email
+    +String password
+    +Datetime created_at
+    +Datetime updated_at
+    +register()
+    +update_profile()
+}
+
+class Place {
+    +UUID id
+    +String title
+    +String description
+    +float price
+    +float latitude
+    +float longitude
+    +UUID owner_id
+    +Datetime created_at
+    +Datetime updated_at
+    +add_amenity()
+    +update_info()
+}
+
+class Review {
+    +UUID id
+    +UUID user_id
+    +UUID place_id
+    +int rating
+    +String comment
+    +Datetime created_at
+    +Datetime updated_at
+    +edit_review()
+}
+
+class Amenity {
+    +UUID id
+    +String name
+    +String description
+    +Datetime created_at
+    +Datetime updated_at
+}
+
+User "1" --> "0..*" Place : owns >
+Place "1" --> "0..*" Review : has >
+User "1" --> "0..*" Review : writes >
+Place "1" --> "0..*" Amenity : includes >
+
+
+
+
+Explanatory Notes
+
+-User-
+Represents a user in the system.
+
+Can be a regular user or an admin.
+Registers, logs in, and manages their profile.
+Can create places and leave reviews.
+-Place-
+Represents a property listed by a user.
+
+Includes details like title, description, location, and price.
+Linked to the user who owns it.
+May contain amenities and receive reviews.
+-Review-
+Represents feedback left by a user on a place.
+
+Contains a rating and a comment.
+Tied to both a user and a place.
+-Amenity-
+Represents a feature or facility available in a place.
+
+Examples: Wi-Fi, air conditioning, parking.
+Linked to one or more places.
+
+--------------------------------------------------------------
+
+ Relationships
+
+User → Place: One user can own multiple places.
+User → Review: One user can write many reviews.
+Place → Review: One place can receive many reviews.
+Place → Amenity: A place can include multiple amenities.
+
+--------------------------------------------------------------
+
+ Summary
+
+This class diagram provides a clear overview of the Business Logic Layer's core entities and their interactions.
+It supports modular design and aligns with SOLID principles, ensuring that each class has a focused responsibility and promotes scalable system architecture.

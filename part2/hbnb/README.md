@@ -33,7 +33,7 @@ hbnb/
 ├── requirements.txt
 ├── tests/
 │   ├── __init__.py
-│   ├── README.md
+│   ├── TESTING.md
 │   ├── test_user.py
 │   ├── test_place.py
 │   ├── test_review.py

@@ -7,7 +7,11 @@ class Amenity(BaseModel):
         Amenity class.
         """
         super().__init__()
-        self.name = name
+		
+		if not name or not isinstance(name, str) or len(name.strip()) == 0:
+            raise ValueError("Invalid name")
+        
+		self.name = name
 
     def to_dict(self):
         return {

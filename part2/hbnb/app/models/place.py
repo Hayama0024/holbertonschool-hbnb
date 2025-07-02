@@ -1,47 +1,52 @@
-from app.models import BaseModel
+from app.models.base_model import BaseModel
+from app.models.user import User
+
 
 class Place(BaseModel):
-    def __init__(self, title, price, latitude, longitude, owner, description=""):
-        """
-        Place class, which inherits from BaseModel.
-        """
+    def __init__(
+        self,
+        title: str,
+        description: str,
+        price: float,
+        latitude: float,
+        longitude: float,
+        owner: User
+    ):
         super().__init__()
+        if not isinstance(title, str) or len(title) > 100:
+            raise ValueError(
+                "Title must be a string of maximum of 100 charateres."
+            )
+        if description is not None and not isinstance(description, str):
+            raise ValueError("Description must be a string")
 
-        if not title or len(title) > 100:
-            raise ValueError("Invalid title")
-        if price < 0:
-            raise ValueError("Price must be positive")
-        if not (-90.0 <= latitude <= 90.0):
-            raise ValueError("Latitude out of range")
-        if not (-180.0 <= longitude <= 180.0):
-            raise ValueError("Longitude out of range")
-        if not hasattr(owner, 'id'):
-            raise ValueError("Invalid owner")
+        if not isinstance(price, (float, int)) or price < 0:
+            raise ValueError("Price must be a positive float.")
 
-        self.title = title
-        self.description = description
-        self.price = price
-        self.latitude = latitude
-        self.longitude = longitude
-        self.owner = owner
-        self.reviews = []
-        self.amenities = []
+        if not isinstance(latitude, (float, int)) or not -90 <= latitude <= 90:
+            raise ValueError("Latitude must be between -90 and 90.")
+
+        if (
+            not isinstance(longitude, (float, int))
+            or not -180 <= longitude <= 180
+        ):
+            raise ValueError("Longitude must be between -180 and 180.")
+        if not isinstance(owner, User):
+            raise ValueError("Owner must be a User instance")
+
+        self.title: str = title
+        self.description: str = description
+        self.price: float = price
+        self.latitude: float = latitude
+        self.longitude: float = longitude
+        self.owner: User = owner
+        self.reviews: list = []  # List to store related reviews
+        self.amenities: list = []  # List to store related amenities
 
     def add_review(self, review):
+        """Add a review to the place."""
         self.reviews.append(review)
 
     def add_amenity(self, amenity):
+        """Add an amenity to the place."""
         self.amenities.append(amenity)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'latitude': self.latitude,
-            'longitude': self.longitude,
-            'owner_id': self.owner.id if hasattr(self.owner, 'id') else None,
-            'amenities': [a.id for a in self.amenities],
-            'created_at': self.created_at.isoformat() if hasattr(self, 'created_at') else None,
-        }

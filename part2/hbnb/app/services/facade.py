@@ -5,11 +5,11 @@ from app.models.place import Place
 from app.models.review import Review
 
 class HBnBFacade:
-    def __init__(self, user_repository=None, place_repository=None, review_repository=None, amenity_repository=None):
-        self.user_repository = user_repository
-        self.place_repository = place_repository
-        self.review_repository = review_repository
-        self.amenity_repository = amenity_repository
+    def __init__(self):
+        self.user_repository = SQLAlchemyRepository(User)
+        self.place_repository = SQLAlchemyRepository(Place)
+        self.review_repository = SQLAlchemyRepository(Review)
+        self.amenity_repository = SQLAlchemyRepository(Amenity)
         self.reviews = {} 
 
     # User methods

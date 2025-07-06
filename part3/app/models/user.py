@@ -1,8 +1,9 @@
 import re
 from app.models import BaseModel
+from app import bcrypt
 
 class User(BaseModel):
-    def __init__(self, first_name, last_name, email, is_admin=False):
+    def __init__(self, first_name, last_name, email, password=None, is_admin=False):
         """
         Users class.
         """
@@ -14,6 +15,10 @@ class User(BaseModel):
             raise ValueError("Invalid last_name")
         if not email or not self._is_valid_email(email):
             raise ValueError("Invalid email")
+        if password is not None:
+            self.hash_password(password)
+        else:
+            self.password = None
 
         self.first_name = first_name
         self.last_name = last_name
@@ -24,6 +29,15 @@ class User(BaseModel):
     def _is_valid_email(self, email):
         rejex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         return re.match(rejex, email) is not None
+
+
+    def hash_password(self, password):
+        """Hashes the password before storing it."""
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    def verify_password(self, password):
+        """Verifies if the provided password matches the hashed password."""
+        return bcrypt.check_password_hash(self.password, password)
 
     def to_dict(self):
         return {

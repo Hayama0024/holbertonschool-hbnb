@@ -1,3 +1,5 @@
+# app/models/amenity.py
+
 from app import db
 from app.models.base_model import BaseModel
 
@@ -10,6 +12,7 @@ class Amenity(BaseModel):
         return {
             "id": self.id,
             "name": self.name,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat(),
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None
         }
+

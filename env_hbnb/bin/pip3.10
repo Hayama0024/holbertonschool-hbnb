@@ -1,4 +1,4 @@
-#!/home/simn-popo/holbertonschool/holbertonschool-hbnb/env_hbnb/bin/python3
+#!/home/simn-popo/holbertonschool/holbertonschool-hbnb/env_hbnb/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

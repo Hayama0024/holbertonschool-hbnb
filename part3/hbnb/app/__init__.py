@@ -49,6 +49,7 @@ def create_app(config_class="config.DevelopmentConfig"):
     api.add_namespace(admin_users, path="/api/v1/admin/users")
 
     with app.app_context():
+        db.create_all()
         seed_users()
 
     return app

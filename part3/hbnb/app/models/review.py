@@ -1,10 +1,20 @@
 from app.models import BaseModel
+from app import db
+from sqlalchemy.orm import relationship
 
 class Review(BaseModel):
+    __tablename__ = 'reviews'
+
+    text = db.Column(db.String(1024), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+
+    user_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    place_id = db.Column(db.String(36), db.ForeignKey('places.id'), nullable=False)
+
+    user = relationship('User', backref='reviews')
+    place = relationship('Place', backref='reviews')
+
     def __init__(self, text, rating, place, user):
-        """
-        Review class.
-        """
         super().__init__()
 
         if not text:
@@ -28,6 +38,8 @@ class Review(BaseModel):
             'rating': self.rating,
             'user_id': self.user.id if self.user else None,
             'place_id': self.place.id if self.place else None,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
         }
 
     def to_dict_get(self):

@@ -1,29 +1,19 @@
-from app.persistence.UserRepository import UserRepository
-from app.persistence.repository import AmenityRepository, SQLAlchemyRepository
-from app.models.user import User
-from app.models.amenity import Amenity
+from app.persistence.user_repository import UserRepository
+from app.persistence.repository import SQLAlchemyRepository
 from app.models.place import Place
 from app.models.review import Review
+from app.models.amenity import Amenity
 
 class HBnBFacade:
-    def __init__(self, user_repository=None, place_repository=None, review_repository=None, amenity_repository=None):
-        self.user_repository = user_repository or UserRepository()
-        self.place_repository = place_repository or SQLAlchemyRepository(Place)
-        self.review_repository = review_repository or SQLAlchemyRepository(Review)
-        self.amenity_repository = amenity_repository or SQLAlchemyRepository(Amenity)
+    def __init__(self):
+        self.user_repository = UserRepository()
+        self.place_repository = SQLAlchemyRepository(Place)
+        self.review_repository = SQLAlchemyRepository(Review)
+        self.amenity_repository = SQLAlchemyRepository(Amenity)
 
-# Users
+    # Users
     def create_user(self, user_data):
-        user = User(
-            first_name=user_data['first_name'],
-            last_name=user_data['last_name'],
-            email=user_data['email'],
-            password=user_data.get("password"),
-            hashed=user_data.get("hashed", False)
-        )
-        user.is_admin = user_data.get("is_admin", False)
-        self.user_repository.add(user)
-        return user
+        return self.user_repository.create(user_data)
 
     def get_user(self, user_id):
         return self.user_repository.get(user_id)
@@ -32,7 +22,10 @@ class HBnBFacade:
         return self.user_repository.get_user_by_email(email)
 
     def update_user(self, user_id, update_data):
-        return self.user_repository.update(user_id, update_data)
+        user = self.user_repository.get(user_id)
+        if not user:
+            return None
+        return self.user_repository.update(user, **update_data)
 
     def get_all_users(self):
         return self.user_repository.get_all()
@@ -40,7 +33,7 @@ class HBnBFacade:
     def delete_user(self, user_id):
         return self.user_repository.delete(user_id)
 
-# Amenity
+    # Amenities
     def create_amenity(self, data):
         amenity = Amenity(name=data['name'])
         self.amenity_repository.add(amenity)
@@ -58,7 +51,7 @@ class HBnBFacade:
     def delete_amenity(self, amenity_id):
         return self.amenity_repository.delete(amenity_id)
 
-# Place
+    # Places
     def create_place(self, place_data):
         price = place_data.get('price')
         latitude = place_data.get('latitude')
@@ -132,7 +125,7 @@ class HBnBFacade:
 
         return self.place_repository.update(place_id, place_data)
 
-# Review
+    # Reviews
     def create_review(self, review_data):
         user = self.user_repository.get(review_data.get('user_id'))
         place = self.place_repository.get(review_data.get('place_id'))

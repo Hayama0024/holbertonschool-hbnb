@@ -1,10 +1,22 @@
 from app.models import BaseModel
+from app import db
+from sqlalchemy.orm import relationship
 
 class Place(BaseModel):
-    def __init__(self, title, price, latitude, longitude, owner, description=""):
-        """
-        Place class, which inherits from BaseModel.
-        """
+    __tablename__ = 'places'
+
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(512), nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+
+    owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
+    owner = relationship('User', backref='places')
+
+    # Reviews and amenities will be added as relationships later
+
+    def __init__(self, title, price, latitude, longitude, owner_id, description=""):
         super().__init__()
 
         if not title or len(title) > 100:
@@ -15,23 +27,13 @@ class Place(BaseModel):
             raise ValueError("Latitude out of range")
         if not (-180.0 <= longitude <= 180.0):
             raise ValueError("Longitude out of range")
-        if not hasattr(owner, 'id'):
-            raise ValueError("Invalid owner")
 
         self.title = title
-        self.description = description
         self.price = price
         self.latitude = latitude
         self.longitude = longitude
-        self.owner = owner
-        self.reviews = []
-        self.amenities = []
-
-    def add_review(self, review):
-        self.reviews.append(review)
-
-    def add_amenity(self, amenity):
-        self.amenities.append(amenity)
+        self.owner_id = owner_id
+        self.description = description
 
     def to_dict(self):
         return {
@@ -41,7 +43,6 @@ class Place(BaseModel):
             'price': self.price,
             'latitude': self.latitude,
             'longitude': self.longitude,
-            'owner_id': self.owner.id if hasattr(self.owner, 'id') else None,
-            'amenities': [a.id for a in self.amenities],
-            'created_at': self.created_at.isoformat() if hasattr(self, 'created_at') else None,
+            'owner_id': self.owner_id,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
         }

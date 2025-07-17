@@ -20,7 +20,6 @@ class AdminUserList(Resource):
     @api.response(403, 'Admin privileges required')
     @jwt_required()
     def get(self):
-        """List all users (admin only)"""
         claims = get_jwt()
         if not claims.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
@@ -33,7 +32,6 @@ class AdminUserList(Resource):
     @api.response(403, 'Admin privileges required')
     @jwt_required()
     def post(self):
-        """Create a user (admin only, can set is_admin)"""
         claims = get_jwt()
         if not claims.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
@@ -53,7 +51,6 @@ class AdminUser(Resource):
     @api.response(403, 'Admin privileges required')
     @jwt_required()
     def put(self, user_id):
-        """Update any user (admin only)"""
         claims = get_jwt()
         if not claims.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403
@@ -74,7 +71,6 @@ class AdminUser(Resource):
     @api.response(403, 'Admin privileges required')
     @jwt_required()
     def delete(self, user_id):
-        """Delete any user (admin only)"""
         claims = get_jwt()
         if not claims.get('is_admin'):
             return {'error': 'Admin privileges required'}, 403

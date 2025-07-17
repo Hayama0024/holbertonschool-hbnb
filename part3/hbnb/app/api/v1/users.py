@@ -18,7 +18,6 @@ class UserList(Resource):
     @api.response(201, 'User created successfully')
     @api.response(400, 'Email already registered')
     def post(self):
-        """Public endpoint: create a user"""
         data = request.get_json()
         if facade.get_user_by_email(data.get("email")):
             return {"error": "Email already registered"}, 400
@@ -31,7 +30,6 @@ class UserProfile(Resource):
     @api.response(403, 'Not authorized')
     @api.response(404, 'User not found')
     def get(self, user_id):
-        """Retrieve own profile"""
         user = facade.get_user(user_id)
         if not user:
             return {"error": "User not found"}, 404

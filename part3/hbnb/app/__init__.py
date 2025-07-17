@@ -53,8 +53,6 @@ def create_app(config_class="config.DevelopmentConfig"):
         seed_users()
 
     return app
-
-
 def seed_users():
     from app.services import facade
     email = "admin@example.com"

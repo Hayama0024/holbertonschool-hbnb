@@ -10,13 +10,12 @@ class Place(BaseModel):
     price = db.Column(db.Float, nullable=False)
     latitude = db.Column(db.Float, nullable=False)
     longitude = db.Column(db.Float, nullable=False)
-
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     owner = relationship('User', backref='places')
 
     # Reviews and amenities will be added as relationships later
 
-    def __init__(self, title, price, latitude, longitude, owner_id, description=""):
+    def __init__(self, title, price, latitude, longitude, owner_id, amenities, description=""):
         super().__init__()
 
         if not title or len(title) > 100:
@@ -33,6 +32,7 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner_id = owner_id
+        self.amenities = amenities
         self.description = description
 
     def to_dict(self):

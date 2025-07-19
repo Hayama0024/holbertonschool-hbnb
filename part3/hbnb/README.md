@@ -84,7 +84,7 @@ User writes many Review
 Place receives many Review
 Place includes many Amenity via Place_Amenity (M2M)
 
-![ER Diagram](./Database%20diagram.png)
+![ER Diagram](./ER-diagram.png)
 
 
 🧬 Data Models Summary

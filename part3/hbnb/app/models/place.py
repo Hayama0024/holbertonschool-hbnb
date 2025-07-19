@@ -1,6 +1,6 @@
-from app.models import BaseModel
-from app import db
+from app.models import BaseModel, place_amenity
 from sqlalchemy.orm import relationship
+from app import db
 
 class Place(BaseModel):
     __tablename__ = 'places'
@@ -13,9 +13,9 @@ class Place(BaseModel):
     owner_id = db.Column(db.String(36), db.ForeignKey('users.id'), nullable=False)
     owner = relationship('User', backref='places')
 
-    # Reviews and amenities will be added as relationships later
+    amenities = db.relationship('Amenity', secondary=place_amenity, backref='places')
 
-    def __init__(self, title, price, latitude, longitude, owner_id, amenities, description=""):
+    def __init__(self, title, price, latitude, longitude, owner_id, description=""):
         super().__init__()
 
         if not title or len(title) > 100:
@@ -32,7 +32,6 @@ class Place(BaseModel):
         self.latitude = latitude
         self.longitude = longitude
         self.owner_id = owner_id
-        self.amenities = amenities
         self.description = description
 
     def to_dict(self):
@@ -45,4 +44,5 @@ class Place(BaseModel):
             'longitude': self.longitude,
             'owner_id': self.owner_id,
             'created_at': self.created_at.isoformat() if self.created_at else None,
+            'amenities': [a.to_dict() for a in self.amenities]
         }

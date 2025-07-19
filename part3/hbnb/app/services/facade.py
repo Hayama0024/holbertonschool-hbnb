@@ -69,7 +69,7 @@ class HBnBFacade:
         if not owner:
             raise ValueError("The specified owner does not exist.")
 
-        amenities_ids = place_data.get('amenities', []).split(',')
+        amenities_ids = place_data.get('amenities', [])
         amenities = []
         for amenity_id in amenities_ids:
             amenity = self.amenity_repository.get(amenity_id)
@@ -82,10 +82,10 @@ class HBnBFacade:
             price=price,
             latitude=latitude,
             longitude=longitude,
-            owner_id=owner,
-            amenities=amenities_ids,
+            owner_id=owner.id,
             description=place_data.get('description', "")
         )
+
         place.amenities = amenities
         self.place_repository.add(place)
         return place

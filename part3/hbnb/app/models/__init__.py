@@ -1,6 +1,8 @@
 from app import db
 import uuid
 from datetime import datetime
+from app.models.associations import place_amenity
+
 
 class BaseModel(db.Model):
     """

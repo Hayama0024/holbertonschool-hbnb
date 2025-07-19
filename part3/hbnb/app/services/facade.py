@@ -11,7 +11,7 @@ class HBnBFacade:
         self.review_repository = SQLAlchemyRepository(Review)
         self.amenity_repository = SQLAlchemyRepository(Amenity)
 
-    # Users
+    # -------------------- USERS --------------------
     def create_user(self, user_data):
         return self.user_repository.create(user_data)
 
@@ -33,7 +33,7 @@ class HBnBFacade:
     def delete_user(self, user_id):
         return self.user_repository.delete(user_id)
 
-    # Amenities
+    # -------------------- AMENITIES --------------------
     def create_amenity(self, data):
         amenity = Amenity(name=data['name'])
         self.amenity_repository.add(amenity)
@@ -51,7 +51,7 @@ class HBnBFacade:
     def delete_amenity(self, amenity_id):
         return self.amenity_repository.delete(amenity_id)
 
-    # Places
+    # -------------------- PLACES --------------------
     def create_place(self, place_data):
         price = place_data.get('price')
         latitude = place_data.get('latitude')
@@ -69,14 +69,19 @@ class HBnBFacade:
         if not owner:
             raise ValueError("The specified owner does not exist.")
 
-        amenities_ids = place_data.get('amenities', [])
+        # 🔄 On récupère les amenities à partir de leur NOM
+        amenities_names = place_data.get('amenities', [])
         amenities = []
-        for amenity_id in amenities_ids:
-            amenity = self.amenity_repository.get(amenity_id)
+        for name in amenities_names:
+            amenity = next(
+                (a for a in self.amenity_repository.get_all() if a.name == name),
+                None
+            )
             if not amenity:
-                raise ValueError(f"Amenity not found: {amenity_id}")
+                raise ValueError(f"Amenity not found: {name}")
             amenities.append(amenity)
 
+        # 🏠 Création du place
         place = Place(
             title=place_data['title'],
             price=price,
@@ -115,18 +120,22 @@ class HBnBFacade:
             del place_data['owner_id']
 
         if 'amenities' in place_data:
-            amenity_ids = place_data['amenities']
+            # ✅ ici encore tu peux adapter pour supporter les noms si tu veux
+            amenity_names = place_data['amenities']
             amenities = []
-            for amenity_id in amenity_ids:
-                amenity = self.amenity_repository.get(amenity_id)
+            for name in amenity_names:
+                amenity = next(
+                    (a for a in self.amenity_repository.get_all() if a.name == name),
+                    None
+                )
                 if not amenity:
-                    raise ValueError(f"Amenity not found: {amenity_id}")
+                    raise ValueError(f"Amenity not found: {name}")
                 amenities.append(amenity)
             place_data['amenities'] = amenities
 
         return self.place_repository.update(place_id, place_data)
 
-    # Reviews
+    # -------------------- REVIEWS --------------------
     def create_review(self, review_data):
         user = self.user_repository.get(review_data.get('user_id'))
         place = self.place_repository.get(review_data.get('place_id'))

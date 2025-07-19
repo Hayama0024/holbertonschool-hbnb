@@ -1,5 +1,7 @@
 from app.persistence.user_repository import UserRepository
-from app.persistence.repository import SQLAlchemyRepository
+from app.persistence.place_repository import PlaceRepository
+from app.persistence.review_repository import ReviewRepository
+from app.persistence.amenity_repository import AmenityRepository
 from app.models.place import Place
 from app.models.review import Review
 from app.models.amenity import Amenity
@@ -7,11 +9,10 @@ from app.models.amenity import Amenity
 class HBnBFacade:
     def __init__(self):
         self.user_repository = UserRepository()
-        self.place_repository = SQLAlchemyRepository(Place)
-        self.review_repository = SQLAlchemyRepository(Review)
-        self.amenity_repository = SQLAlchemyRepository(Amenity)
+        self.place_repository = PlaceRepository()
+        self.review_repository = ReviewRepository()
+        self.amenity_repository = AmenityRepository()
 
-    # -------------------- USERS --------------------
     def create_user(self, user_data):
         return self.user_repository.create(user_data)
 
@@ -33,7 +34,6 @@ class HBnBFacade:
     def delete_user(self, user_id):
         return self.user_repository.delete(user_id)
 
-    # -------------------- AMENITIES --------------------
     def create_amenity(self, data):
         amenity = Amenity(name=data['name'])
         self.amenity_repository.add(amenity)
@@ -51,7 +51,6 @@ class HBnBFacade:
     def delete_amenity(self, amenity_id):
         return self.amenity_repository.delete(amenity_id)
 
-    # -------------------- PLACES --------------------
     def create_place(self, place_data):
         price = place_data.get('price')
         latitude = place_data.get('latitude')
@@ -69,7 +68,6 @@ class HBnBFacade:
         if not owner:
             raise ValueError("The specified owner does not exist.")
 
-        # 🔄 On récupère les amenities à partir de leur NOM
         amenities_names = place_data.get('amenities', [])
         amenities = []
         for name in amenities_names:
@@ -81,7 +79,6 @@ class HBnBFacade:
                 raise ValueError(f"Amenity not found: {name}")
             amenities.append(amenity)
 
-        # 🏠 Création du place
         place = Place(
             title=place_data['title'],
             price=price,
@@ -120,7 +117,6 @@ class HBnBFacade:
             del place_data['owner_id']
 
         if 'amenities' in place_data:
-            # ✅ ici encore tu peux adapter pour supporter les noms si tu veux
             amenity_names = place_data['amenities']
             amenities = []
             for name in amenity_names:
@@ -135,17 +131,25 @@ class HBnBFacade:
 
         return self.place_repository.update(place_id, place_data)
 
-    # -------------------- REVIEWS --------------------
     def create_review(self, review_data):
-        user = self.user_repository.get(review_data.get('user_id'))
-        place = self.place_repository.get(review_data.get('place_id'))
+        user_identifier = review_data.get('user_id')
+        place_identifier = review_data.get('place_id')
+
+        user = self.user_repository.get_by_attribute("email", user_identifier)
+        if not user:
+            user = self.user_repository.get_by_attribute("first_name", user_identifier)
+        if not user:
+            raise ValueError("The specified user does not exist.")
+
+        place = self.place_repository.get(place_identifier)
+        if not place:
+            place = self.place_repository.get_by_attribute("title", place_identifier)
+        if not place:
+            raise ValueError("The specified place does not exist.")
+
         rating = review_data.get('rating')
         text = review_data.get('text')
 
-        if not user:
-            raise ValueError("The specified user does not exist.")
-        if not place:
-            raise ValueError("The specified place does not exist.")
         if rating is None or not (0 <= rating <= 5):
             raise ValueError("Rating must be between 0 and 5.")
 

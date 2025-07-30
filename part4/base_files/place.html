@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Place Details</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <div class="nav-left">
+      <img src="images/logo.png" alt="logo"/>
+      <a href="index.html">Home</a>
+    </div>
+    <div class="nav-right">
+      <a href="login.html" id="login-link">Login</a>
+      <a href="#" id="logout-link" style="display:none;">Logout</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="place-info"></section>
+
+    <h2>Reviews</h2>
+    <section class="reviews"></section>
+    <div class="add-review-container" style="display:none;">
+      <a href="#" class="add-review" id="add-review-button">Add a Review</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - All rights reserved to me.</p>
+  </footer>
+
+  <script src="scripts.js"></script>
+  <script>
+    document.getElementById('add-review-button').addEventListener('click', () => {
+      const placeId = new URLSearchParams(window.location.search).get('id');
+      window.location.href = `add_review.html?place_id=${placeId}`;
+    });
+  </script>
+</body>
+</html>

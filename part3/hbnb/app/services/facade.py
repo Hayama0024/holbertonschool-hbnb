@@ -132,20 +132,20 @@ class HBnBFacade:
         return self.place_repository.update(place_id, place_data)
 
     def create_review(self, review_data):
-        user_identifier = review_data.get('user_id')
-        place_identifier = review_data.get('place_id')
+        user_id = review_data.get('user_id')
+        place_id = review_data.get('place_id')
 
-        user = self.user_repository.get_by_attribute("email", user_identifier)
-        if not user:
-            user = self.user_repository.get_by_attribute("first_name", user_identifier)
+        user = self.user_repository.get(user_id)
         if not user:
             raise ValueError("The specified user does not exist.")
 
-        place = self.place_repository.get(place_identifier)
-        if not place:
-            place = self.place_repository.get_by_attribute("title", place_identifier)
+        place = self.place_repository.get(place_id)
         if not place:
             raise ValueError("The specified place does not exist.")
+
+        # Uniquement une review par utilisateur et par lieu
+        if any(r.user_id == user_id for r in place.reviews):
+            raise ValueError("You have already reviewed this place.")
 
         rating = review_data.get('rating')
         text = review_data.get('text')

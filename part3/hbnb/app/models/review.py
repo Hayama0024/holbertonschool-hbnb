@@ -14,22 +14,22 @@ class Review(BaseModel):
     user = relationship('User', backref='reviews')
     place = relationship('Place', backref='reviews')
 
-    def __init__(self, text, rating, place, user):
+    def __init__(self, text, rating, user, place):
         super().__init__()
 
         if not text:
             raise ValueError("Review text is required")
         if not (1 <= rating <= 5):
             raise ValueError("Rating must be between 1 and 5")
-        if not isinstance(place, object) or not hasattr(place, 'id'):
-            raise ValueError("Invalid place")
-        if not isinstance(user, object) or not hasattr(user, 'id'):
+        if not hasattr(user, 'id'):
             raise ValueError("Invalid user")
+        if not hasattr(place, 'id'):
+            raise ValueError("Invalid place")
 
         self.text = text
         self.rating = rating
-        self.place = place
         self.user = user
+        self.place = place
 
     def to_dict(self):
         return {
@@ -47,4 +47,9 @@ class Review(BaseModel):
             'id': self.id,
             'text': self.text,
             'rating': self.rating,
+            'user': {
+                'id': self.user.id,
+                'first_name': self.user.first_name,
+                'last_name': self.user.last_name
+            } if self.user else None
         }

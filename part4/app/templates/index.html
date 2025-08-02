@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Places - HBnB</title>
+  <link rel="stylesheet" href="/static/css/index.css">
+  <link rel="stylesheet" href="/static/css/base.css">
+</head>
+<body>
+  <header>
+    <a href="/index.html" class="logo-link" aria-label="Go to home">
+      <img src="/static/images/logo.png" alt="HBnB Logo" class="logo">
+    </a>
+    <a href="/login.html" class="login-button" id="login-link">Login</a>
+    <a href="#" class="logout-button" id="logout-link" style="display: none;">Logout</a>
+  </header>
+
+  <main>
+    <h1>Places</h1>
+
+    <label for="price-filter">Filter by Price:</label>
+    <select id="price-filter">
+      <option value="All">All</option>
+      <option value="10">Up to $10</option>
+      <option value="50">Up to $50</option>
+      <option value="100">Up to $100</option>
+    </select>
+
+    <section id="places-list">
+      <!-- JS will inject .place-card elements here -->
+    </section>
+  </main>
+
+  <footer>
+    <p>All rights reserved.</p>
+  </footer>
+
+  <script src="/static/js/index.js" defer></script>
+</body>
+</html>

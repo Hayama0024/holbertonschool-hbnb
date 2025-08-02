@@ -1,0 +1,36 @@
+/* static/css/login.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px;
+  }
+  
+  .login-button {
+    text-decoration: none;
+    background-color: #ff5a5f;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  main {
+    padding: 40px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+  }  

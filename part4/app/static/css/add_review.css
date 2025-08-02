@@ -1,0 +1,48 @@
+/* static/css/add_review.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 40px;
+  }
+  
+  .login-button {
+    text-decoration: none;
+    background-color: #6f42c1;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  main {
+    padding: 30px;
+  }
+  
+  form {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+  }
+  
+  textarea {
+    width: 100%;
+    height: 100px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+  }  

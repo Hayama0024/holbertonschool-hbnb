@@ -198,4 +198,29 @@ cython_debug/
 # Marimo
 marimo/_static/
 marimo/_lsp/
-__marimo__/
+__marimo__/# macOS
+.DS_Store
+
+# Archives
+*.zip
+
+# Python
+venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.pytest_cache/
+.coverage
+
+# Node/Frontend
+node_modules/
+dist/
+build/
+
+# Editors/OS
+.vscode/
+.idea/
+Thumbs.db
+
+# Env
+.env
